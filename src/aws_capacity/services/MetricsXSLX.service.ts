@@ -1,13 +1,11 @@
 import fs from "fs";
 import XLSX from 'xlsx'
 import dayjs, { Dayjs } from "dayjs";
-import dotenv from "dotenv";
 
 import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
 import { MetricsService } from "./Metrics.service";
 import { AWSMetricsFileHandler } from "../handlers/AWSMetricsHandler";
 import { Metric } from "../models/Metric";
-import { Injectable } from "@nestjs/common";
 import { PROOutputReport } from "../models/ProOutputReport";
 import { PlusOutputReport } from "../models/PlusOutputReport";
 
@@ -37,9 +35,6 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 		this.workbook = XLSX.utils.book_new();
 
 		this.checkStructureIntegrity();
-
-		// Load env data
-		dotenv.config();
 
 		// * Get metadata from file to feed paths
 		const { resource, service, product } = this.report.dashboardDetails!;

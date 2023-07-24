@@ -1,5 +1,5 @@
 
-import { Controller, Get, Body, Patch, Param, Post, Query, Render } from '@nestjs/common';
+import { Controller, Get, Body, Post, Query, Render } from '@nestjs/common';
 
 import { MetricsXLSXReportService } from './services/MetricsXSLX.service';
 import { MetricsService } from './services/Metrics.service';
@@ -11,7 +11,7 @@ import { AwsCapacityService } from './aws_capacity.service';
  * Controller to handle awsReport requests
  * @class AWSReportController
  */
-@Controller('aws_report/')
+@Controller('/')
 export class AwsCapacityController {
   // /**
   //  * Constructor
@@ -23,13 +23,8 @@ export class AwsCapacityController {
   @Render('index')
   root() {
     return {
-      dashboards: metricsByDashboardName, 
-      callback: this.consoleSomeshit,
+      dashboards: metricsByDashboardName
     }
-  }
-
-  consoleSomeshit() {
-    console.log(" is someshit");
   }
 
   /**

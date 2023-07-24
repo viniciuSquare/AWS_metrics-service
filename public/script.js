@@ -31,7 +31,7 @@ form.addEventListener("change", (event) => handleFormFilesSelection(event.target
 buttons.addEventListener("click", (event) => {
   event.preventDefault();
   console.log('click')
-  submitForm("http://localhost:3000/aws_report/handle-files?command=" + event.srcElement.id);
+  submitForm("http://localhost:3000/handle-files?command=" + event.srcElement.id);
 });
 
 function handleFormFilesSelection(files) {
