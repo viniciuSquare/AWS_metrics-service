@@ -21,7 +21,7 @@ export class AwsCapacityController {
   
   @Get()
   @Render('index')
-  root() {
+  function () {
     return {
       dashboards: metricsByDashboardName
     }

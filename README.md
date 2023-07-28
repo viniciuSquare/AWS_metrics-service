@@ -1,16 +1,50 @@
 # AWS Capacity Report handler
-This tool must help AWS metrics reports generation to performance analysis.
+This tool must help AWS metrics reports generation to performance analysis. 
+With data processed and persisted, database feed Grafana metrics dashboard.
 
-## Running the project
-### Runnning locally
-With **nodeJS** installed, execute the commands:
-- To install dependencies `` npm install ``
-- Then run with `` npm run serve `` to serve the HTML to handle the CSV files.
+
+## How does it works?
+It reads CSV files with metrics to save to database or create a XLSX sheet so then decisions can be taken from the metrics.
+
+### Runnning locally with NodeJS
+With **nodeJS** installed
+1. Clone ```.env.exemple``` and set the variables:
+   - Case use database, set `DATABASE_URL`;
+   - Case use to generate XSLX files:
+      - `RAW_DIRNAME`: path to raw CSV files;
+      - `TREATED_DIRNAME`: output to processed reports.
+   
+**To run execute the commands:**
+1. To install dependencies `` npm install ``;
+2. Case use the database:
+   1. `npx prisma generate` to create database client;
+   2. `npx prisma migrate dev` to create the database structure;
+
+3. Then run with ``npm run start:dev`` to serve the HTML to handle the CSV files.
+
 <!-- - after set directories to **raw CSV files**, metadata - `MetricsByDashboardName` map and `AWSDetails` to **outputReport**.
    !! Theses paths are hard coded for now !! -->
 ### Runnning with Docker
 Run ``docker composer up`` and it will initialize the database and serve the HTML to handle the CSV files.
 
+I created a image available at [Docker Hub](https://hub.docker.com/repository/docker/viniciusquare/quiver_aws_metrics_service/general).
+Project files are at `/usr/app` directory and the API listens to `3000`;
+
+- `docker-compose.yml` service example:
+  ```yml
+    aws_capacity_service:
+      build: ./aws_capacity-service
+      container_name: quiver_aws_capacity_service
+      command: npm run start:dev
+      ports:
+        - "3000:3000"
+      volumes:
+        - ./aws_capacity-service:/usr/app
+      environment:
+        - DATABASE_URL=mysql://user:password@host:3306/aws_metrics?pool_timeout=0
+        - TREATED_DIRNAME=treated
+        - RAW_DIRNAME=raw
+  ```
 ---
 
 # Development context
