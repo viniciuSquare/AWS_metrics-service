@@ -4,7 +4,7 @@ import { Controller, Get, Body, Post, Query, Render } from '@nestjs/common';
 import { MetricsXLSXReportService } from './services/MetricsXSLX.service';
 import { MetricsService } from './services/Metrics.service';
 import { metricsByDashboardName } from './shared/metadata/MetricsByDashboardName';
-import { AWSMetricsFileHandler } from './handlers/AWSMetricsHandler';
+import { AWSMetricsFileHandler } from '../handlers/AWSMetricsHandler';
 import { AwsCapacityService } from './aws_capacity.service';
 
 /**
@@ -17,7 +17,9 @@ export class AwsCapacityController {
   //  * Constructor
   //  * @param awsReportService awsReport Service to handle requests
   //  */
-  constructor(private readonly service: AwsCapacityService) { }
+  constructor(
+    private readonly service: AwsCapacityService,
+  ) { }
   
   @Get()
   @Render('index')

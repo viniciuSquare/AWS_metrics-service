@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { Metric } from "../../models/Metric";
 import { ToolsKit } from "../../shared/Tool";
-import { AWSMetricsFileHandler } from "../../handlers/AWSMetricsHandler";
+import { AWSMetricsFileHandler } from "../../../handlers/AWSMetricsHandler";
 
 export class AWSMetricsReportBaseService {
 

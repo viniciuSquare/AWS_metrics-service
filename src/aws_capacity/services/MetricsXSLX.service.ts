@@ -3,8 +3,7 @@ import XLSX from 'xlsx'
 import dayjs, { Dayjs } from "dayjs";
 
 import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
-import { MetricsService } from "./Metrics.service";
-import { AWSMetricsFileHandler } from "../handlers/AWSMetricsHandler";
+import { AWSMetricsFileHandler } from "../../handlers/AWSMetricsHandler";
 import { Metric } from "../models/Metric";
 import { PROOutputReport } from "../models/ProOutputReport";
 import { PlusOutputReport } from "../models/PlusOutputReport";
@@ -106,7 +105,7 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 	// }
 
 	public processMetricsIntoDailySheets(path = this.processedReportPath) {
-		const metricsService = new MetricsService(this.report);
+		// const metricsService = new MetricsService(this.report);
 
 		const metricsByTime = this.metricsByTime();
 
