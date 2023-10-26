@@ -2,11 +2,10 @@ import fs from "fs";
 import XLSX from 'xlsx'
 import dayjs, { Dayjs } from "dayjs";
 
-import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
-import { AWSMetricsFileHandler } from "../../handlers/AWSMetricsHandler";
 import { Metric } from "../models/Metric";
 import { PROOutputReport } from "../models/ProOutputReport";
 import { PlusOutputReport } from "../models/PlusOutputReport";
+import { AWSMetricsReportBaseService } from "../../aws/services/base/BaseMetrics.service";
 
 export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 	public srcCodeBaseDir = __dirname.split('/').splice(0, __dirname.split('/').length - 1).join('/');
@@ -23,7 +22,6 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 	};
 
 	public metrics: Metric[] = [];
-	public days: string[] = [];
 
 	private resource: string;
 	private product: string;
@@ -118,9 +116,6 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 
 			// Rename day to sheet name
 			const sheetName = day.replace('/', '-').replace('/', '-')
-			if(!this.days.includes(day))
-				this.days.push(day); // TODO -> REMOVE THIS LINE
-
 			// Add sheet to workbook
 			XLSX.utils.book_append_sheet(this.workbook, worksheet, sheetName);
 		})
@@ -150,32 +145,11 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 		console.log("Day metrics into workbook ", path, "\n");
 	}
 
-	groupDaysIntoWeeks(days: string[]) {
-		const weeks: string[][] = [];
-		let currentWeek: string[] = [];
-		let previousDate: Date;
-
-		days.forEach((dayString, i) => {
-			const [day, month, year] = dayString.split("/");
-
-			const currentDate = new Date(`${month}/${day}/${year}`);
-
-			if (previousDate && currentDate.getDate() - previousDate.getDate() > 1) {
-				weeks.push(currentWeek);
-				currentWeek = [];
-			}
-			currentWeek.push(dayString);
-			previousDate = currentDate;
-			
-			i == days.length - 1 && weeks.push(currentWeek);
-		});
-
-		return weeks;
-	}
-
 	getReportWeekFormula() {
 		const productReportInstance: PROOutputReport | PlusOutputReport = this.product == 'PRO' ? new PROOutputReport() : new PlusOutputReport();
-		const groupedDays = this.groupDaysIntoWeeks(this.days);
+		const groupedDays = this.groupDaysIntoWeeks.map( dates => {
+			return dates.map(date => date.toISOString())
+		} );
 
 		const reportWeekFormula = productReportInstance.getWeekMetricsFormulaBy(groupedDays);
 		
@@ -219,39 +193,4 @@ export class MetricsXLSXReportService extends AWSMetricsReportBaseService {
 
 		return destinationSheet;
 	}
-
-	/** *
-	 * head: "Product | Service  | Resource"
-	 * 
-	 */
-
-	// createWorkbookIndexes(data: object[]) {
-
-	// }
-
-	groupWeekDates(dates: string[]): string[][] {
-		const days: Dayjs[] = dates.map((dateString, index) => {
-			const [day, month, year] = dateString.split('/')
-			const date = dayjs(`${year}-${month}-${day}`);
-
-			return date
-		})
-
-		const group: string[][] = [];
-		let currentGroup: string[] = [];
-
-		days.forEach((day, index) => {
-			if (index === 0 || !day.isSame(dayjs(days[index - 1], 'DD/MM/YY').add(1, 'day'), 'day')) {
-				// If it's the first date or the difference between this date and the previous date is not exactly one day
-				// Start a new group
-				currentGroup = [days[index].format('DD/MM/YYYY')];
-				group.push(currentGroup);
-			} else {
-				// Otherwise, add the date to the current group
-				currentGroup.push(days[index].format('DD/MM/YYYY'));
-			}
-		})
-		return group;
-	}
-
 }

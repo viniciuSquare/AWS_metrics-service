@@ -1,5 +1,5 @@
 
-import { Controller, Get, Body, Post, Query, Render, Req, UploadedFile, UseInterceptors, Res } from '@nestjs/common';
+import { Controller, Get, Body, Post, Query, Render, UploadedFile, UseInterceptors } from '@nestjs/common';
 
 import { metricsByDashboardName } from './shared/metadata/MetricsByDashboardName';
 import { AwsCapacityService } from './aws_capacity.service';
@@ -44,10 +44,14 @@ export class AwsCapacityController {
     console.debug(file)
     console.debug(command)
 
-    if (command == 'save-metrics') {
-      return this.service.persistUploadedFileMetrics(file);
-    } else if (command == 'get-excel') {
-      return this.service.uploadedFileXslxReport(file);
+    if ( command == 'save-metrics' ) {
+      console.log(command, file);
+      
+      return await this.service.persistUploadedFileMetrics(file);
+
+    } else if ( command == 'get-excel' ) {
+      console.log(command, file) 
+      return await this.service.uploadedFileXslxReport(file);
     } else {
       throw new Error('Invalid command');
     }

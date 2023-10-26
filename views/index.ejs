@@ -11,7 +11,9 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/dashboards-table.css" />
+    <link rel="stylesheet" href="styles/uploader-form.css" />
     <!-- ICONS -->
     <link
       rel="stylesheet"
@@ -19,36 +21,16 @@
     />
   </head>
   <body>
-    <h1>AWS Capacity Report</h1>
-    <div class="file-processing-field wrapper">
-      <h2 class="title">Upload CSV AWS Metrics Report</h2>
-      <form enctype="multipart/form-data" id="submit-form" action="submit">
-        <div 
-          id="file-selector"
-        >
-          <input
-            id="file-selector-input"
+    <header>
+      <h1>Upload de Relatórios AWS</h1>
+      <!-- <div>
+        <span>Capacity</span>
+        <span>Billing</span>
+      </div> -->
+    </header>
 
-            type="file"
-            name="file"
-            accept=".xlsx,.xls,.csv"
-            required
-            multiple
-            hidden
-          />
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p>Selecione arquivos para serem importados</p>
-        </div>
-        <div id="buttons">
-          <!-- <button type="submit" id="get-excel">Process data into EXCEL</button> -->
-          <button type="submit" id="save-metrics">Save Metrics</button>
-        </div>
-      </form>
-      <div class="separator"></div>
-      <!-- PROGRESS -->
-      <section class="progress" id="queue-list">
-        <!-- FED BY SELECTED FILES -->
-      </section>
+    <div id="forms-container">
+      <!-- FORMS WILL BE PLACED HERE -->
     </div>
 
     <div class="dashboards-table wrapper">
@@ -74,7 +56,9 @@
         </tbody>
       </table>
     </div>
+    
   </body>
 
-  <script src="script.js"></script>
+  <!-- <script src="scripts/index.js"></script> -->
+  <script src="scripts/fileUploader.js"></script>
 </html>

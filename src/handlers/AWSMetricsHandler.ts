@@ -24,8 +24,8 @@ export class AWSMetricsFileHandler {
   ) {}
 
   async feedData() {
-    this.feedRawData();
-    this.feedDashboardDetails();
+    await this.feedRawData();
+    await this.feedDashboardDetails();
   }
 
   private async feedRawData() {
@@ -196,9 +196,14 @@ export class AWSMetricsFileHandler {
   }
 
   // Filtering business period - weekdays, from 08h to 21h
-  getMetricsOnValidPeriod(): Metric[] {
+  getMetricsOnValidPeriod(): {
+    metrics: Metric[], days: Date[]
+  } {
     let acumulator: {
-      notBusinessDay: Metric[], notBusinessHour: Metric[], validPeriod: Metric[]
+      notBusinessDay: Metric[], 
+      notBusinessHour: Metric[], 
+      validPeriod: Metric[],
+      days: Date[]
     }
 
     const businessPeriodValidation = this.metrics.reduce((acc: typeof acumulator, metric) => {
@@ -209,18 +214,25 @@ export class AWSMetricsFileHandler {
         acc.notBusinessHour.push(metric);
       } else {
         acc.validPeriod.push(metric);
+        const formattedDate = metric.date.toISOString().split('T')[0];
+        if(!acc.days.find(date => date.toISOString().split('T')[0] == formattedDate))
+          acc.days.push(metric.date);
       }
       return acc;
-    }, { notBusinessDay: [], notBusinessHour: [], validPeriod: [] });
+    }, { notBusinessDay: [], notBusinessHour: [], validPeriod: [], days: [] });
 
     const filteredByPeriod = Object.keys(businessPeriodValidation).map((key) => {
       if ((key == "notBusinessDay" || key == "notBusinessHour" || key == "validPeriod"))
         return { key, items: businessPeriodValidation[key].length }
     })
 
-    // console.log(filteredByPeriod.filter((period) => period!.key == "validPeriod")[0]?.items, " metrics on valid period\n");
+    // console.log(filteredByPeriod.filter(
+      // (period) => period!.key == "validPeriod")[0]?.items, " metrics on valid period\n");
 
-    return businessPeriodValidation.validPeriod
+    return {
+      metrics: businessPeriodValidation.validPeriod,
+      days: businessPeriodValidation.days    
+    }
   }
 
   private get rawContentArray() {

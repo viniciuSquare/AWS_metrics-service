@@ -1,14 +1,18 @@
 import dayjs from "dayjs";
-import { Metric } from "../../models/Metric";
-import { ToolsKit } from "../../shared/Tool";
+import { Metric } from "../../../aws_capacity/models/Metric";
+import { ToolsKit } from "../../../aws_capacity/shared/Tool";
 import { AWSMetricsFileHandler } from "../../../handlers/AWSMetricsHandler";
 
 export class AWSMetricsReportBaseService {
 
   protected metrics: Metric[] = [];
+  protected days: Date[] = [];
 
   constructor( protected report: AWSMetricsFileHandler ) {
-    this.metrics = report.getMetricsOnValidPeriod()
+    const {metrics, days} = report.getMetricsOnValidPeriod()
+		this.metrics = metrics; 
+		this.days = days;
+
 		console.log(this.metrics.length + " metrics loaded on " + this.report.dashboardDetails?.dashboardName);
   } 
 

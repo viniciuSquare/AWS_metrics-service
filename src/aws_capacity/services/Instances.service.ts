@@ -31,7 +31,6 @@ export class InstanceService {
       })
       
       if (!prismaInstances) {
-        console.log("There are no instances, can't update report metadata")
         throw new Error("There are no instances, can't update report metadata");
       }
       
@@ -53,7 +52,7 @@ export class InstanceService {
         return storedInstances
 
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }
@@ -109,7 +108,7 @@ export class InstanceService {
   //     `${this.instancesDir}/${this.instances.region}.json`,
   //     parsedData, "utf-8",
   //     (err) => {
-  //       err ? console.log(err) : console.log("Data saves successfully!!\n")
+  //       err ? console.error(err) : console.log("Data saves successfully!!\n")
   //     }
   //   )
   // }

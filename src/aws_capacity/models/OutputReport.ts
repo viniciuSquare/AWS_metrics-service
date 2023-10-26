@@ -39,11 +39,6 @@ export abstract class OutputReport {
         }
     }
 
-    // // TODO - Period to generate sheets name
-    // sheetsNamesFromPeriod() {
-
-    // }
-
     getWeekMetricsFormulaBy(weeks: Date[][]) {
 
         // For each day in the week, get the cpu and memory formulas
