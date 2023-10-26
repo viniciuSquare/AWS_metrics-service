@@ -1,5 +1,5 @@
 
-import { Controller, Get, Body, Post, Query, Render } from '@nestjs/common';
+import { Controller, Get, Body, Post, Query, Render, UploadedFile } from '@nestjs/common';
 
 import { MetricsXLSXReportService } from './services/MetricsXSLX.service';
 import { MetricsService } from './services/Metrics.service';
