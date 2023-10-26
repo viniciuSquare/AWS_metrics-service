@@ -91,3 +91,11 @@ model WeeksPeriod {
   start DateTime
   end   DateTime
 }
+
+model ServiceDailyCost {
+  id      Int      @id @default(autoincrement())
+  service String
+  cost    Float
+  date    DateTime
+  product String
+}

@@ -39,24 +39,29 @@ export abstract class OutputReport {
         }
     }
 
-    getWeekMetricsFormulaBy(weeks: string[][]) {
+    getWeekMetricsFormulaBy(weeks: Date[][]) {
+
         // For each day in the week, get the cpu and memory formulas
         // weekFormulaSample `=IFERROR(AVERAGE('01-02-2023'!C17;'02-02-2023'!C17;'03-02-2023'!C17);"-")`
         return weeks.map((weekdays) => {
             const formulaBase = `=IFERROR(AVERAGE();"-")`;
-            const database_cpu = weekdays.map((day, index) => {
+            const database_cpu = weekdays.map((date, index) => {
+                const day = date.toDateString();
                 return `'${day.split("/").join("-")}'!${this.outputReportProperties.database.resourceMetricsRanges.cpu.weekMetricsStartRange.split(':')[0]}${index + 1 == weekdays.length ? "" : ";"}`;
             }).join("");
 
-            const database_memory = weekdays.map((day, index) => {
+            const database_memory = weekdays.map((date, index) => {
+                const day = date.toDateString();
                 return `'${day.split("/").join("-")}'!${this.outputReportProperties.database.resourceMetricsRanges.memory.weekMetricsStartRange.split(':')[0]}${index + 1 == weekdays.length ? "" : ";"}`;
             }).join("");
 
-            const application_cpu = weekdays.map((day, index) => {
+            const application_cpu = weekdays.map((date, index) => {
+                const day = date.toDateString();
                 return `'${day.split("/").join("-")}'!${this.outputReportProperties.application.resourceMetricsRanges.cpu.weekMetricsStartRange.split(':')[0]}${index + 1 == weekdays.length ? "" : ";"}`;
             }).join("");
 
-            const application_memory = weekdays.map((day, index) => {
+            const application_memory = weekdays.map((date, index) => {
+                const day = date.toDateString();
                 return `'${day.split("/").join("-")}'!${this.outputReportProperties.application.resourceMetricsRanges.memory.weekMetricsStartRange.split(':')[0]}${index + 1 == weekdays.length ? "" : ";"}`;
             }).join("");
 

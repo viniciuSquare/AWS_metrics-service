@@ -1,12 +1,10 @@
 import { CSVFile } from "./CSVFile";
 
 import { QuiverProducts } from "@prisma/client";
-import { DashboardMetadata } from "../shared/Types";
-
-import { metricsByDashboardName } from "../shared/metadata/MetricsByDashboardName";
-
-import { Metric } from "../models/Metric";
-import { Instance } from "../models/Instance";
+import { DashboardMetadata } from "src/aws_capacity/shared/Types";
+import { metricsByDashboardName } from "src/aws_capacity/shared/metadata/MetricsByDashboardName";
+import { Metric } from "src/aws_capacity/models/Metric";
+import { Instance } from "src/aws_capacity/models/Instance";
 
 /**
  * Handle AWS metrics CSV report 

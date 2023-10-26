@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AWSMetricsFileHandler } from './handlers/AWSMetricsHandler';
+import { AWSMetricsFileHandler } from '../handlers/AWSMetricsHandler';
 import { MetricsXLSXReportService } from './services/MetricsXSLX.service';
 import { MetricsService } from './services/Metrics.service';
 

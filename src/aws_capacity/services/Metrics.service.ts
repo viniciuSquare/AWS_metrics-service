@@ -2,11 +2,11 @@
 import { Injectable } from "@nestjs/common";
 import { ToolsKit } from "../../aws_capacity/shared/Tool";
 
+import { AWSMetricsFileHandler } from "../../handlers/AWSMetricsHandler";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Periods } from "@prisma/client";
 
-import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
-import { AWSMetricsFileHandler } from "../handlers/AWSMetricsHandler";
+import { AWSMetricsReportBaseService } from "../../aws/services/base/BaseMetrics.service";
 
 import { Metric } from "../models/Metric";
 
