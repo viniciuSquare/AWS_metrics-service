@@ -39,11 +39,6 @@ export abstract class OutputReport {
         }
     }
 
-    // // TODO - Period to generate sheets name
-    // sheetsNamesFromPeriod() {
-
-    // }
-
     getWeekMetricsFormulaBy(weeks: string[][]) {
         // For each day in the week, get the cpu and memory formulas
         // weekFormulaSample `=IFERROR(AVERAGE('01-02-2023'!C17;'02-02-2023'!C17;'03-02-2023'!C17);"-")`
@@ -84,7 +79,7 @@ export abstract class OutputReport {
                 ),
             };
         });
-    };
+    }
 
     dayAverageFunctions(startCell: string) {
         startCell = 'C4';

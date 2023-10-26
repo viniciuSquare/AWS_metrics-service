@@ -1,12 +1,15 @@
 
 import { Injectable } from "@nestjs/common";
 import { ToolsKit } from "../../aws_capacity/shared/Tool";
-import { AWSMetricsFileHandler } from "../handlers/AWSMetricsHandler";
-import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
-import { Metric } from "../models/Metric";
-import { PrismaService } from "src/prisma/prisma.service";
 
+import { PrismaService } from "src/prisma/prisma.service";
 import { Periods } from "@prisma/client";
+
+import { AWSMetricsReportBaseService } from "./base/BaseMetrics.service";
+import { AWSMetricsFileHandler } from "../handlers/AWSMetricsHandler";
+
+import { Metric } from "../models/Metric";
+
 
 @Injectable()
 export class MetricsService extends AWSMetricsReportBaseService {
@@ -24,9 +27,12 @@ export class MetricsService extends AWSMetricsReportBaseService {
 
     if (promises) {
       return await Promise.all(promises)
+        .finally(async ()=> {
+        await this.saveMetricsPeriod()
+      })
     }
 
-    console.log("No promise")
+    console.error("No promise")
   }
 
   async storeMetric(metric: Metric) {
@@ -103,5 +109,35 @@ export class MetricsService extends AWSMetricsReportBaseService {
     throw new Error(`\nIncomplete data!!\t ${metric.instance?.id} ${metric.maximumUsage} ${metric.resource} ${metric.service} ${metric.date}`)
 
 
+  }
+
+  async saveMetricsPeriod() {
+    const weeks = this.groupDaysIntoWeeks
+    console.log(weeks)
+    return await Promise.all(weeks.map(async weekDays => {
+      const start = weekDays[0];
+      const end = weekDays[weekDays.length - 1];
+      const label = `Semana ${this.formatDateToBR(start)} - ${this.formatDateToBR(end)}`.replace(/\/2023/g, '')
+
+      console.log(label);
+
+      const weekRegister = await this.prisma.weeksPeriod.findFirst({
+        where: {
+          start: {
+            equals: start
+          }
+        }
+      })
+
+      if (!weekRegister) {
+        return await this.prisma.weeksPeriod.create({
+          data: {
+            label,
+            start,
+            end,
+          }
+        })
+      } else console.log("Duplicated: " + label);
+    }))
   }
 }

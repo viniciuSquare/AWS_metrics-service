@@ -20,7 +20,7 @@ export class Queue {
             console.log(filesOnQueue.length, " files on queue");
             console.table(filesOnQueue);
         } else
-            console.log("None file on queue")
+            console.error("None file on queue")
 
         return filesOnQueue;
     }

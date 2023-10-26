@@ -35,14 +35,20 @@ export class AwsCapacityController {
    */
   @Post('/handle-files')
   async handleUploadedFile(
-    @Query('command') command: string,
-    @Body() body: any,
+    @UploadedFile() file: Array<Express.Multer.File>,
+    @Query('command') command: string
   ) {
-    console.log(body)
-    if (command == 'save-metrics') {
-      return this.persistUploadedFileMetrics(body.file);
-    } else if (command == 'get-excel') {
-      return this.uploadedFileXslxReport(body.file);
+    console.debug(file)
+    console.debug(command)
+
+    if ( command == 'save-metrics' ) {
+      console.log(command, file);
+      
+      return await this.service.persistUploadedFileMetrics(file);
+
+    } else if ( command == 'get-excel' ) {
+      console.log(command, file) 
+      return await this.service.uploadedFileXslxReport(file);
     } else {
       throw new Error('Invalid command');
     }
