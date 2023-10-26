@@ -1,0 +1,32 @@
+/* Dashboards table */
+.dashboards-table {
+  width: 100%;
+
+}
+
+.dashboards-table table {
+  width: 100%;
+}
+
+.dashboards-table table tr {
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dashboards-table table tr:nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.3);
+}
+
+.dashboards-table table th {
+  background-color: rgba(128, 128, 128, 0.089);
+  padding-left: 0.85rem;
+  padding: 0.3rem;
+
+  font-size: 16px;
+
+}
+
+.dashboards-table table td {
+  padding-left: 0.85rem;
+  padding: 0.5rem;
+  font-size: 16px;
+}

@@ -1,12 +1,32 @@
 // ELEMENTS SELECTORS
-const form = document.getElementById("submit-form");
-const buttons = document.getElementById("buttons");
-const queueList = document.getElementById("queue-list");
+const form = document.getElementById('submit-form');
+const buttons = document.getElementById('buttons');
 
-const fileSelectorDiv = document.getElementById("file-selector");
-const fileSelectorInput = document.getElementById("file-selector-input");
+const queueList = document.getElementById('queue-list');
 
-fileSelectorDiv.addEventListener('click', () => fileSelectorInput.click() )
+const fileSelectorDiv = document.getElementById('capacity-file-selector');
+const fileSelectorInput = document.getElementById(
+  'capacity-file-selector-input',
+);
+
+const buttonsArray = document.getElementsByClassName('button');
+
+Object.values(buttonsArray).forEach((button) => {
+  button.addEventListener('click', (e) =>
+    console.log('clicked', e.srcElement.id),
+  );
+});
+
+//
+const formData = new FormData();
+let files;
+
+let command = null;
+
+// * LISTENERS
+// * DRAG AND DROP ON DIV
+fileSelectorDiv.addEventListener('click', () => fileSelectorInput.click());
+
 fileSelectorDiv.addEventListener('dragover', (event) => {
   event.preventDefault();
   fileSelectorDiv.classList.add('dragover');
@@ -19,14 +39,18 @@ fileSelectorDiv.addEventListener('dragleave', () => {
 fileSelectorDiv.addEventListener('drop', (event) => {
   event.preventDefault();
   fileSelectorDiv.classList.remove('dragover');
-  
-  const files = event.dataTransfer.files;
+  console.log('Files dropped!', event.dataTransfer.files);
+
+  files = event.dataTransfer.files;
+
   fileSelectorInput.files = files;
 
   handleFormFilesSelection(files)
 });
 
-form.addEventListener("change", (event) => handleFormFilesSelection(event.target.files));  
+form.addEventListener('change', (event) => {
+  files = event.target.files;
+  console.log('Changed!', files);
 
 buttons.addEventListener("click", (event) => {
   event.preventDefault();
@@ -35,14 +59,35 @@ buttons.addEventListener("click", (event) => {
 });
 
 function handleFormFilesSelection(files) {
-  // window.files = event.target.files;
+  console.log(files, 'handle files selection');
+  console.log(fileSelectorInput.files);
 
-  Array.from(files).forEach( file => {
+  Object.values(fileSelectorInput.files).forEach((file) => {
+    formData.append('file', file);
+  });
+
+  console.log(formData, ' appended files');
+
+  Array.from(files).forEach((file) => {
     createFileOnQueue(file.name);
   })
 }
 
 function createFileOnQueue(filename) {
+
+  `
+    <li class='row'>
+      <div class="content">
+        <div class="file-details">
+          <i class="fas fa-file-alt"></i>
+          <div class="file">
+            ${fileDiv}
+          </div>
+        </div>
+      </div>
+    </li>
+  `
+  
   // Create the li element
   const liElement = document.createElement("li");
   liElement.classList.add("row");
@@ -110,29 +155,35 @@ function createFileOnQueue(filename) {
   queueList.appendChild(liElement);
 }
 
-function submitForm(path) {
-  handleFileUploadProgress(path, new FormData(form));
-}
+// Handle submit
+buttons.addEventListener('click', (event) => {
+  command = event.srcElement.id;
+});
 
-function handleFileUploadProgress(path, data) {
-  uploadFile(path, data);
-  console.log(data)
-  // ADD TO QUEUE LIS
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
 
-  // HANDLE PROGRESS
-}
+  fetch('http://localhost:3000/handle-files?command=' + command, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data; charset=utf-8',
+    },
+    body: formData,
+  });
+  console.log(formData);
+});
 
-function uploadFile(path, data) {
-  const xhr = new XMLHttpRequest(); // create a new XMLHttpRequest object
-  xhr.open("POST", path, true); // set up the request
+// function uploadFile(path, data) {
+//   const xhr = new XMLHttpRequest(); // create a new XMLHttpRequest object
+//   xhr.open('POST', path, true); // set up the request
 
-  xhr.setRequestHeader("enctype", "multipart/form-data"); // set the enctype header
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      // handle the response
-      console.log(xhr.responseText);
-    }
-  };
-  console.log(data);
-  xhr.send(data);
-}
+//   xhr.setRequestHeader('enctype', 'multipart/form-data'); // set the enctype header
+//   xhr.onreadystatechange = function () {
+//     if (xhr.readyState === 4 && xhr.status === 200) {
+//       // handle the response
+//       console.log(xhr.responseText);
+//     }
+//   };
+//   console.log({files: data});
+//   xhr.send(data);
+// }
